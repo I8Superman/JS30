@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Key Detection</title>
+  <script type="text/javascript" src="./cornify.js"></script>
+  <link rel="icon" href="https://fav.farm/🔥" />
+</head>
+
+<body>
+  <script>
+    let pressed = []
+    const secretCode = 'sim'
+
+    const triggerMagicPerhaps = () => {
+      // .join = join all elem in arr together in a string. 
+      // Takes 1 param: the separator between the elems in the sting. Use '' if you want no separator.
+      if (pressed.join('') === secretCode) {
+        cornify_add() // Cornify is a special pre-made script that creates rainbows and unicorns on the screen
+      }
+    }
+
+    const checkSeq = () => {
+      // Da vores hemmelige kode skal trykkes sammenhængende, har vi ikke brug for flere 
+      // bogstaver end lige præcis antallet som koden består af. 
+      // Vi er også kun interesseret i de sidste 5 bogstaver, da det skal være
+      // de sidste 5 bogstaver, der udgør koden.
+      // .splice 'trimmer' vores arr. Vi kan trimme forfra eller bagfra (sæt et - foran index'et).
+      // Deletcount er hvor manfe index vi sletter. Her: vi sletter alle index ud over de 5 vi behøver. 
+      pressed.splice(-secretCode.length - 1, pressed.length - secretCode.length)
+      console.log(pressed)
+      triggerMagicPerhaps()
+    }
+    window.addEventListener('keyup', (e) => {
+      pressed.push(e.key)
+      checkSeq()
+    })
+  </script>
+</body>
+
+</html>

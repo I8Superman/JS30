@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Type Ahead 👀</title>
+  <link rel="stylesheet" href="style-start.css">
+  <link rel="icon" href="https://fav.farm/🔥" />
+</head>
+
+<body>
+
+  <form class="search-form">
+    <input type="text" class="search" placeholder="City or State">
+    <ul class="suggestions">
+      <!-- Clone new suggestions here -->
+      <li class="placeholder">Filter for a city</li>
+      <li class="placeholder">or a state</li>
+    </ul>
+  </form>
+
+  <template class="city-template">
+    <li>
+      <!-- <p class="content"></p> -->
+      <span class="population"></span>
+    </li>
+  </template>
+  <!-- MY SOLUTION ----------------------------------------------------- -->
+  <script>
+
+    let searchTxt = ''
+
+    let cities = []
+
+    const runScript = () => {
+      const filterCities = (searchValue) => {
+        const updateFilter = cities.filter(place => {
+          const regex = new RegExp(searchValue, 'gi'); // g = global, i = case insensitive
+          const matchCase = place.city.match(regex) || place.state.match(regex);
+          return matchCase
+        })
+
+        // MY OWN SOLUTION (NO REGEX)
+        // let updateFilter = cities.filter((place) => {
+        //   if (place.city.toLowerCase().includes(searchValue.toLowerCase()) || place.state.toLowerCase().includes(searchValue.toLowerCase())) {
+        //     return place
+        //   }
+        // });
+        return updateFilter
+      }
+
+      const displayCities = (cities, noValue, searchValue) => {
+        const cloneParent = document.querySelector('.suggestions');
+        if (noValue === true) { // Check if no proper vales was entered ('', ' ' or no matches) - clear search results if true and don't display the results
+          cloneParent.innerHTML = '';
+          return
+        }
+        cloneParent.innerHTML = ''; // Remove previous list elems before displaying new ones
+
+        const insertCommas = (popNum) => {
+          return popNum.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+        }
+
+        cities.forEach(place => {
+          const template = document.querySelector('.city-template');
+          const clone = template.content.cloneNode(true);
+          const regex = new RegExp(searchValue, 'gi') // The constructor is needed if the regular expression will be changing (as here, with a variable)
+          // Get the regex match value instead of search value to avoid mutating case sensitivity in the results
+          const cityMatch = place.city.match(regex)
+          const stateMatch = place.state.match(regex)
+
+          const cityName = place.city.replace(regex, `<span class="highlighted">${cityMatch}</span>`);
+          const stateName = place.state.replace(regex, `<span class="highlighted">${stateMatch}</span>`);
+          const cityPopulation = insertCommas(place.population);
+
+          clone.querySelector('li').innerHTML =
+            `<p>${cityName}, ${stateName}</p><span class="population">${cityPopulation}</span>`;
+
+          cloneParent.appendChild(clone);
+        });
+      };
+
+      const searchInput = document.querySelector('.search');
+
+      const updateSearch = (e) => {
+        const searchValue = e.target.value
+        let noValue = false;
+        const getCities = filterCities(searchValue)
+        // Check if no cities, nothing entered or only space entered:
+        if (getCities.length === 0 || searchValue === '' || searchValue === ' ') {
+          noValue = true;
+        }
+        displayCities(getCities, noValue, searchValue)
+      };
+
+      searchInput.addEventListener('input', updateSearch)
+    }
+
+    const endpoint = 'https://gist.githubusercontent.com/Miserlou/c5cd8364bf9b2420bb29/raw/2bf258763cdddd704f8ffd3ea9a3e81d25e2c6f6/cities.json';
+
+    const fetchCities = async () => {
+      const response = await fetch(endpoint)
+      const json = await response.json()
+      cities = json;
+      runScript();
+    }
+
+    fetchCities();
+  </script>
+</body>
+
+</html>

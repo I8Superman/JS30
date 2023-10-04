@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Mouse Shadow</title>
+  <link rel="icon" href="https://fav.farm/🔥" />
+</head>
+
+<body>
+
+  <div class="hero">
+    <h1 class="word" contenteditable>🔥WOAH!</h1>
+  </div>
+
+  <style>
+    html {
+      color: black;
+      font-family: sans-serif;
+    }
+
+    body {
+      margin: 0;
+    }
+
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: black;
+    }
+
+    h1 {
+      font-size: 100px;
+    }
+  </style>
+
+  <script>
+    const word = document.querySelector('.word');
+
+    const moveShadows = (e) => {
+      const halfWinX = window.innerWidth / 2;
+      const halfWinY = window.innerHeight / 2;
+
+      // Blue follows mouse
+      const posX = (e.clientX - halfWinX) / 2;
+      const posY = (e.clientY - halfWinY) / 2;
+      const negX = -(e.clientX - halfWinX) / 2;
+      const negY = -(e.clientY - halfWinY) / 2;
+
+      const farthestDistFromCenter = Math.max(Math.abs(posX), Math.abs(posY));
+      console.log(farthestDistFromCenter);
+
+      word.style.textShadow = `
+      ${posX}px ${posY}px 0 rgb(56, 82, 229), 
+      ${posY}px ${negY}px 0 rgb(83, 227, 117), 
+      ${negY}px ${posX}px 0 rgb(223, 65, 80), 
+      ${posY}px ${negX}px 0 rgb(203, 233, 66)
+      `
+    }
+
+    window.addEventListener('mousemove', moveShadows)
+  </script>
+</body>
+
+</html>

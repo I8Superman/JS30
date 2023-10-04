@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>HTML5 Canvas</title>
+  <link rel="icon" href="https://fav.farm/🔥" />
+</head>
+
+<body>
+  <canvas id="draw" width="800" height="800"></canvas>
+  <script>
+    const canvas = document.querySelector('#draw');
+    const ctx = canvas.getContext('2d')
+
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    ctx.strokeStyle = 'red';
+    ctx.lineJoin = 'round';
+    ctx.lineCap = 'round';
+    // ctx.globalCompositeOperation = 'multiply';
+
+    let isDrawing = false;
+    let startX = 0;
+    let startY = 0;
+    let hue = Math.floor(Math.random() * 360);
+    let strokeWidth = Math.floor(Math.random() * 50);
+    let strokeDirection = true;
+
+    const draw = (e) => {
+      if (!isDrawing) return;
+      ctx.strokeStyle = `hsl(${hue}, 100%, 50%)`
+      ctx.lineWidth = strokeWidth;
+      ctx.beginPath();
+      // start from
+      ctx.moveTo(startX, startY);
+      // go to
+      ctx.lineTo(e.offsetX, e.offsetY);
+      ctx.stroke();
+      // Set start point to end point everytime a mousemove event is triggered
+      [startX, startY] = [e.offsetX, e.offsetY];
+
+      if (hue >= 360) {
+        hue = 0
+      } else {
+        hue++
+      }
+
+      if (strokeWidth >= 100 || strokeWidth <= 1) {
+        strokeDirection = !strokeDirection;
+      }
+
+      if (strokeDirection) {
+        strokeWidth++
+      } else {
+        strokeWidth--
+      }
+    }
+
+    canvas.addEventListener('mousedown', (e) => {
+      isDrawing = true;
+      // Set starting point for line
+      [startX, startY] = [e.offsetX, e.offsetY]
+    });
+    canvas.addEventListener('mousemove', draw);
+    canvas.addEventListener('mouseup', () => isDrawing = false);
+    canvas.addEventListener('mouseout', () => isDrawing = false);
+
+  </script>
+
+  <style>
+    html,
+    body,
+    * {
+      margin: 0px;
+      padding: 0px;
+      box-sizing: border-box;
+    }
+
+    #draw {}
+  </style>
+
+</body>
+
+</html>

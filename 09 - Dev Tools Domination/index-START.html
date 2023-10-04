@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Console Tricks!</title>
+  <link rel="icon" href="https://fav.farm/🔥" />
+</head>
+
+<body>
+
+  <p onClick="makeGreen()">×BREAK×DOWN×</p>
+
+  <script>
+    const dogs = [{ name: 'Snickers', age: 2 }, { name: 'hugo', age: 8 }];
+
+    function makeGreen() {
+      const p = document.querySelector('p');
+      p.style.color = '#BADA55';
+      p.style.fontSize = '50px';
+    }
+
+    // Different console methods:
+
+    // Regular
+    console.log('Hello')
+
+    // Interpolated
+    const yourName = 'Turd'
+    console.log(`Hello you ${yourName}`)
+
+    // Styled - We can style logs! (handy when a lot of logs are in play)
+    console.log('%c This log was is styled with the 2nd arg', 'font-weight: 800; background: lightblue; color: red;')
+
+    // warning!
+    console.warn('BEWARE!!! (console.warn)')
+
+    // Error :|
+    console.error('ERROR!!! (console.error)')
+
+    // Info
+    console.info('This is some useful info')
+
+    // Testing - console.assert() -> Will show an error if statement is false. If true, nothing is shown
+    console.assert(1 === 1, 'This is true')
+    console.assert(1 === 2, 'This is false')
+
+    // clearing
+    // console.clear() // Simply clears the console
+
+    // Viewing DOM Elements
+    const p = document.querySelector('p')
+    console.log('Logging a DOM elem:', p)
+    console.log('Logging the methods and properties on an elem with console.dir():')
+    console.dir(p)
+
+    // Grouping together - 
+    dogs.forEach(dog => {
+      console.groupCollapsed(`${dog.name}`); // or just .group. .groupCollapsed will autocollapse the group data in the console
+      console.log(`This is ${dog.name}`);
+      console.log(`${dog.name} is ${dog.age} years old`);
+      console.log(`${dog.name} is ${dog.age * 7} dog years old`);
+      console.groupEnd(`${dog.name}`);
+    });
+
+    // Counting - ?
+    console.count('Simon')
+    console.count('Simon')
+    console.count('Carsteen')
+    console.count('Simon')
+    console.count('Carsteen')
+    console.count('Simon')
+    console.count('Simon')
+
+    // Timing - Time a process in the console:
+    console.time('fetch data')
+    fetch('https://api.github.com/users/wesbos')
+      .then(data => data.json())
+      .then(data => {
+        console.timeEnd('fetch data')
+        console.log(data)
+      })
+
+    // Table
+    console.table(dogs)
+
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>JS + CSS Clock</title>
+  <link rel="icon" href="https://fav.farm/🔥" />
+</head>
+
+<body>
+
+
+  <div class="clock">
+    <div class="clock-face">
+      <div class="hand hour-hand"></div>
+      <div class="hand minute-hand"></div>
+      <div class="hand second-hand"></div>
+    </div>
+  </div>
+
+
+  <style>
+    html {
+      background: #018DED url(https://unsplash.it/1500/1000?image=881&blur=5);
+      background-size: cover;
+      font-family: 'helvetica neue';
+      text-align: center;
+      font-size: 10px;
+    }
+
+    body {
+      margin: 0;
+      font-size: 2rem;
+      display: flex;
+      flex: 1;
+      min-height: 100vh;
+      align-items: center;
+    }
+
+    .clock {
+      width: 30rem;
+      height: 30rem;
+      border: 20px solid white;
+      border-radius: 50%;
+      margin: 50px auto;
+      position: relative;
+      padding: 2rem;
+      box-shadow:
+        0 0 0 4px rgba(0, 0, 0, 0.1),
+        inset 0 0 0 3px #EFEFEF,
+        inset 0 0 10px black,
+        0 0 10px rgba(0, 0, 0, 0.2);
+    }
+
+    .clock-face {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      transform: translateX(-3px);
+      /* account for the height of the clock hands */
+    }
+
+    .hand {
+      width: 6px;
+      height: 50%;
+      background: black;
+      position: absolute;
+      left: 50%;
+      transform-origin: bottom center;
+      transition: transform 0.07s;
+      transition-timing-function: cubic-bezier(0.6, 0.72, 0.61, 2.43);
+    }
+
+    .hour-hand {
+      background-color: red;
+      height: 40%;
+      top: 10%;
+    }
+  </style>
+
+  <script>
+    "use strict"
+
+    // Removes hand at 12 pos and creates a new one to avoid backwards transition
+    const addHand = (hand) => {
+      console.log('New hand created!')
+      const newHand = document.createElement('div');
+      newHand.classList.add('hand', `${hand}-hand`);
+      document.querySelector('.clock-face').appendChild(newHand);
+    }
+    // PROBLEM: Viserne drejer de modsatte vej, når de flytter sig mod kl.12-positionen
+    const runClock = () => {
+      const time = new Date();
+
+      const hourHand = document.querySelector('.hour-hand');
+      const minuteHand = document.querySelector('.minute-hand');
+      const secondHand = document.querySelector('.second-hand');
+      // Calculate rotation degree. If time is 0, auto set to 360 (12 o clock pos):
+      const hourDeg = time.getHours() === 0 ? 360 : time.getHours() / 12 * 360;
+      const minuteDeg = time.getMinutes() === 0 ? 360 : time.getMinutes() / 60 * 360;
+      const secondDeg = time.getSeconds() === 0 ? 360 : time.getSeconds() / 60 * 360;
+
+      const handDegPairs = [{ hand: 'hour', elem: hourHand, deg: hourDeg }, { hand: 'minute', elem: minuteHand, deg: minuteDeg }, { hand: 'second', elem: secondHand, deg: secondDeg }]
+
+      // Reset hand so it doesn't transition counterclockwise:
+      handDegPairs.forEach(pair => {
+        if (pair.deg === 360) {
+          pair.elem.addEventListener('transitionend', () => {
+            pair.elem.remove();
+            addHand(pair.hand);
+          });
+        }
+      });
+
+      // Apply transform rotate to the arm(s)
+      hourHand.style.transform = `rotate(${hourDeg}deg)`;
+      minuteHand.style.transform = `rotate(${minuteDeg}deg)`;
+      secondHand.style.transform = `rotate(${secondDeg}deg)`;
+
+    }
+
+    setInterval(() => {
+      runClock();
+    }, 1000);
+
+
+
+
+  </script>
+</body>
+
+</html>
