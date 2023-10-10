@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <title>Sort Without Articles</title>
   <link rel="icon" href="https://fav.farm/🔥" />
 </head>
+
 <body>
 
   <style>
@@ -41,16 +43,70 @@
       color: #ffc600;
       text-decoration: none;
     }
-
   </style>
 
-  <ul id="bands"></ul>
+  <ul id="bands">
+    Bands here
+  </ul>
 
-<script>
-const bands = ['The Plot in You', 'The Devil Wears Prada', 'Pierce the Veil', 'Norma Jean', 'The Bled', 'Say Anything', 'The Midway State', 'We Came as Romans', 'Counterparts', 'Oh, Sleeper', 'A Skylit Drive', 'Anywhere But Here', 'An Old Dog'];
+  <script>
+    // Data to be sorted:
+    const bands = ['The Plot in You', 'The Devil Wears Prada', 'Pierce the Veil', 'Norma Jean', 'The Bled', 'Say Anything the Wife Said', 'The Midway State', 'We Came as Romans', 'Counterparts', 'Oh, Sleeper', 'A Skylit Drive', 'Anywhere But Here', 'An Old Dog'];
 
 
-</script>
+
+    // Func to remove article ('The', 'A', 'An') from band name:
+
+    // BOS' SOLUTION (a lot shorter):
+    // Arrow func has implicit return. RegEx means: ^: at start of string, (the |a | an): if contains one of these combinations of letters, i: case insensitive.
+    // .replace() simply replaces the RegEx with ''. .trim() removes any accidental spaces at either end of the string.
+    const stripArticle = (bandName) => bandName.replace(/^(a |the |an )/i, '').trim();
+
+    // MY SOLUTION:
+    // const articleRemoved = (band) => {
+    //   const firstWord = band.substring(0, band.indexOf(" "));
+    //   if (firstWord == 'The' || firstWord == 'A' || firstWord == 'An') {
+    //     const articleRemoved = band.slice(band.indexOf(" ") + 1)
+    //     return articleRemoved
+    //   } else {
+    //     return band
+    //   }
+    // }
+
+    // Sort func that compares band names without articles
+    // .toSorted() creates a new arr, while .sort() will just reference the existing one:
+
+    // BOS' SOLUTION (using ternary operator):
+    const sortedBands = bands.toSorted((a, b) => stripArticle(a) > stripArticle(b) ? 1 : -1)
+
+    console.log(sortedBands)
+    // MY SOLUTION (classic if statement):
+    // const sortedBands = bands.toSorted((a, b) => {
+    //   if (stripArticle(a) > stripArticle(b)) {
+    //     return 1
+    //   } else {
+    //     return -1
+    //   }
+    // })
+
+    // Display the sorted data:
+    // BOS' SOLUTION (using .map and .join to first change every band name into an html li elem, then joining them
+    // all in a long string with .join):
+    document.querySelector('#bands').innerHTML =
+      sortedBands
+        .map(band => `<li>${band}</li>`)
+        .join('');
+
+    // MY SOLUTION (Avoids use of innerHTML)
+
+    sortedBands.forEach(band => {
+      const listItem = document.createElement('li');
+      listItem.textContent = band;
+      document.querySelector('#bands').appendChild(listItem);
+    });
+
+  </script>
 
 </body>
+
 </html>
