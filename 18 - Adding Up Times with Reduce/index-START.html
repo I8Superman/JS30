@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <title>Videos</title>
   <link rel="icon" href="https://fav.farm/🔥" />
 </head>
+
 <body>
   <ul class="videos">
     <li data-time="5:43">
@@ -109,7 +111,7 @@
     <li data-time="0:47">
       Video 34
     </li>
-    <li data-time="3:14">
+    <li data-time="3:16">
       Video 35
     </li>
     <li data-time="3:59">
@@ -142,13 +144,13 @@
     <li data-time="7:10">
       Video 45
     </li>
-    <li data-time="3:44">
+    <li data-time="3:01">
       Video 46
     </li>
-    <li data-time="3:44">
+    <li data-time="3:47">
       Video 47
     </li>
-    <li data-time="4:36">
+    <li data-time="2:36">
       Video 48
     </li>
     <li data-time="3:16">
@@ -182,7 +184,38 @@
       Video 58
     </li>
   </ul>
-<script>
-</script>
+  <script>
+    // MY SOLUTION (optimized with Bos' ideas):
+
+    // Get the damn time durati:
+    const liElems = Array.from(document.querySelectorAll('[data-time]'))
+
+    const totalTimeInSecs = liElems // We can do several .map methods after each other (putting them on seperate lines here)
+      .map(node => node.dataset.time)
+      .map(timeCode => {
+        // Split the timecode into 2 strings and convert them to numbers:
+        const [mins, secs] = timeCode.split(':').map(time => parseFloat(time))
+        return (mins * 60) + secs; // Return the timecode converted to secs
+      })
+      .reduce((total, duration) => total + duration, 0) // Reduce in 1 line! 
+
+    console.log(totalTimeInSecs)
+
+    // My previous reduce function:
+
+    // const totalTime = durationsInSecs.reduce((total, duration) => {
+    //   return total + duration;
+    // }, 0)
+
+    const getHoursMinsSecs = () => {
+      const hours = Math.floor(totalTimeInSecs / 3600) // As there's 3600 secs to an hour. Round down with Math.floor
+      const mins = Math.floor((totalTimeInSecs % 3600) / 60); // Get remainder of minutes after hour calc and round down 
+      const secs = totalTimeInSecs % 60; // Get remainder of secs after mins are calculated (dont need to care about the hours here, as the remainder will be the same)
+      return `Total video time is ${hours} hours, ${mins} mins, ${secs} secs`
+    }
+
+    console.log(getHoursMinsSecs()) 
+  </script>
 </body>
+
 </html>
