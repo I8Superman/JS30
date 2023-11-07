@@ -187,7 +187,8 @@
   <script>
     // MY SOLUTION (optimized with Bos' ideas):
 
-    // Get the damn time durati:
+    // Get the li elems with time stamps (selecting multiple elems gives a node-list. Must turn them into
+    // array to be able to use array methods - other than .forEach - on them)
     const liElems = Array.from(document.querySelectorAll('[data-time]'))
 
     const totalTimeInSecs = liElems // We can do several .map methods after each other (putting them on seperate lines here)
