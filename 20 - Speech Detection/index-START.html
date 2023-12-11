@@ -1,20 +1,85 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <title>Speech Detection</title>
   <link rel="icon" href="https://fav.farm/🔥" />
 </head>
-<body>
 
+<body>
+  <!-- 'contenteditable' means the user can edit the content of the div:-->
   <div class="words" contenteditable>
   </div>
+  <br><br>
+  <button class="toggle">Toggle speech recognition</button>
 
-<script>
-  window.SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  <script>
+    // Firefox = .SpeecRecognition, Chrome = .webkitSpeechRecognition
+    // One or the other will be selected based on truthiness
+    window.SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 
+    const recognition = new SpeechRecognition(); // It's an API
+    recognition.interimResults = true; // Set to translate speech to text on the fly INSTEAD of waiting till speech is over
+    recognition.lang = 'da'; // Sæt the language to be recognised
 
-</script>
+    // Create a p tag and append it to th .words div
+    let p = document.createElement('p');
+    const words = document.querySelector('.words');
+    words.appendChild(p);
+
+    recognition.addEventListener('result', e => {
+      const transcript = Array.from(e.results)
+        .map(result => result[0].transcript)
+        .join('')
+      console.log(e.results)
+      p.textContent = transcript;
+      if (e.results[0].isFinal) { // At some point speech recognition determines that this is the end of this speech input (.isFinal)
+        p = document.createElement('p')
+        words.appendChild(p)
+      }
+      if (transcript.toLowerCase().includes('hallo')) {
+        console.log('HALLO SELV!!!!')
+      }
+    })
+
+    shouldSpeechRun = true;
+
+    recognition.start();
+
+    recognition.addEventListener('end', e => {
+      if (!shouldSpeechRun) {
+        shouldSpeechRun = false
+        recognition.stop()
+        console.log('Speech recognition stopped!')
+      } else {
+        recognition.start()
+        console.log('Speech recognition continues!')
+
+      }
+    }
+    )
+
+    document.querySelector('.toggle').addEventListener('click', e => {
+      shouldSpeechRun = !shouldSpeechRun;
+      if (shouldSpeechRun) recognition.start()
+    })
+    // document.querySelector('.toggle').addEventListener('click', e => {
+    //   if (isSpeechRunning) {
+    //     console.log(isSpeechRunning)
+    //     recognition.stop();
+    //     isSpeechRunning = false;
+    //     console.log("Speech recognition is OFF!");
+    //     console.log(isSpeechRunning)
+    //   } else {
+    //     console.log(isSpeechRunning)
+    //     recognition.start();
+    //     isSpeechRunning = true;
+    //     console.log("Speech recognition is ON!");
+    //     console.log(isSpeechRunning)
+    //   }
+    // })
+  </script>
 
 
   <style>
@@ -34,7 +99,7 @@
       margin: 50px auto;
       background: white;
       border-radius: 5px;
-      box-shadow: 10px 10px 0 rgba(0,0,0,0.1);
+      box-shadow: 10px 10px 0 rgba(0, 0, 0, 0.1);
       padding: 1rem 2rem 1rem 5rem;
       background: -webkit-gradient(linear, 0 0, 0 100%, from(#d9eaf3), color-stop(4%, #fff)) 0 4px;
       background-size: 100% 3rem;
@@ -59,4 +124,5 @@
   </style>
 
 </body>
+
 </html>
